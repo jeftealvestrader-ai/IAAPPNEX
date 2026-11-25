@@ -151,8 +151,8 @@ Descreva o que deseja criar e clique em “Gerar código HTML” ou “Gerar App
       return value.trim().replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/, "").trim();
     }
     $("testar").addEventListener("click", ()=> testarConexao(false));
-    // MODELO NOVO CORRIGIDO - gemini-3.8-flash
-    const MODELO = "gemini-3.8-flash";
+    // MODELO ATUALIZADO - mais estável e com cota maior
+    const MODELO = "gemini-2.0-flash";
     async function testarConexao(silencioso){
       const key = $("key").value.trim();
       if(!key){ if(!silencioso) setStatus("Cole sua chave primeiro."); setTopo(false); return; }
