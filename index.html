@@ -134,7 +134,7 @@ Descreva o que deseja criar e clique em “Gerar código HTML” ou “Gerar App
     let iaLigada = false;
     $("year").textContent = new Date().getFullYear();
     const chaveSalva = localStorage.getItem('appnex_gemini_key') || '';
-    if(chaveSalva){ $("key").value = chaveSalva; setTimeout(()=> testarConexao(true), 500); }
+    if(chaveSalva){ $("key").value = chaveSalva; }
     $("toggleKey").addEventListener("click", () => { $("key").type = $("key").type === "password" ? "text" : "password"; });
     document.querySelectorAll("[data-prompt]").forEach(button => { button.addEventListener("click", () => $("prompt").value = button.dataset.prompt); });
     function setStatus(message, loading = false, ok = false) {
@@ -150,28 +150,43 @@ Descreva o que deseja criar e clique em “Gerar código HTML” ou “Gerar App
     function cleanCode(value) {
       return value.trim().replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/, "").trim();
     }
+    function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
     $("testar").addEventListener("click", ()=> testarConexao(false));
-    // MODELO ATUALIZADO - mais estável e com cota maior
-    const MODELO = "gemini-2.0-flash";
+    // ÚNICO MODELO QUE O GOOGLE DEIXOU ATIVO EM 2026
+    const MODELO = "gemini-3.8-flash";
+    // Função que chama o Google e se estiver lotado, espera e tenta de novo sozinha
+    async function chamarGemini(key, texto){
+      for(let tentativa=1; tentativa<=3; tentativa++){
+        const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + MODELO + ":generateContent?key=" + encodeURIComponent(key), {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: texto }]}] })
+        });
+        const d = await r.json();
+        if(r.ok) return d;
+        const msg = d?.error?.message || "";
+        const lotado = r.status===429 || msg.includes("Quota") || msg.includes("high demand") || msg.includes("overloaded") || msg.includes("RESOURCE_EXHAUSTED");
+        if(lotado && tentativa<3){
+          setStatus("Google lotado, esperando 25s e tentando de novo sozinho... (tentativa "+tentativa+"/3)", true);
+          await sleep(26000);
+          continue;
+        }
+        throw new Error(msg || "Chave inválida");
+      }
+    }
     async function testarConexao(silencioso){
       const key = $("key").value.trim();
       if(!key){ if(!silencioso) setStatus("Cole sua chave primeiro."); setTopo(false); return; }
       localStorage.setItem('appnex_gemini_key', key);
-      setStatus("Ligando IA... testando conexão...", true);
+      setStatus("Ligando IA... pode demorar uns segundos...", true);
       try{
-        const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + MODELO + ":generateContent?key=" + encodeURIComponent(key), {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ parts: [{ text: "Responda só: OK" }]}] })
-        });
-        const d = await r.json();
-        if(!r.ok) throw new Error(d?.error?.message || "Chave inválida");
+        await chamarGemini(key, "Responda só: OK");
         setStatus("IA LIGADA ✅ Pronta pra gerar!", false, true);
         setTopo(true);
         if(!silencioso) alert("✅ IA LIGADA! Pode gerar seu projeto agora.");
       }catch(e){
         setStatus("IA NÃO ligou: " + e.message);
         setTopo(false);
-        if(!silencioso) alert("❌ Não ligou: " + e.message);
+        if(!silencioso) alert("❌ Não ligou: " + e.message + "\n\nEspera 1 minuto e tenta 1 vez só.");
       }
     }
     $("generate").addEventListener("click", ()=> gerar(false));
@@ -198,21 +213,7 @@ Descreva o que deseja criar e clique em “Gerar código HTML” ou “Gerar App
       setStatus("Conectando à inteligência artificial...", true);
       try {
         const instrucaoApp = modoApp ? "Você é a APPNEX IA. Crie um APLICATIVO WEB completo estilo app de celular. OBRIGATÓRIO: design mobile-first (max-width 430px centralizado), tela inicial, menu inferior fixo com 4 abas clicáveis, cards, botões grandes, navegação por telas sem recarregar, salvar dados no localStorage, parecer um app nativo, funcionar como PWA. " : "Você é a APPNEX IA, uma desenvolvedora web especialista. ";
-        const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + MODELO + ":generateContent?key=" + encodeURIComponent(key), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text:
-              instrucaoApp + "Crie exatamente o que o usuário pediu. Entregue somente um documento HTML completo, funcional e pronto para salvar como index.html e publicar na Cloudflare Pages. Use português do Brasil, design profissional, responsivo e acessível. Quando fizer sentido, inclua botão de contato por WhatsApp, mas não invente número: use um campo claramente indicado para o usuário configurar. Não use bibliotecas externas sem necessidade. Não explique o código fora do HTML. Pedido do usuário: " + prompt
-            }]}],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 8192 }
-          })
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          const message = data?.error?.message || "Não foi possível concluir a solicitação.";
-          throw new Error(message);
-        }
+        const data = await chamarGemini(key, instrucaoApp + "Crie exatamente o que o usuário pediu. Entregue somente um documento HTML completo, funcional e pronto para salvar como index.html e publicar na Cloudflare Pages. Use português do Brasil, design profissional, responsivo e acessível. Quando fizer sentido, inclua botão de contato por WhatsApp, mas não invente número: use um campo claramente indicado para o usuário configurar. Não use bibliotecas externas sem necessidade. Não explique o código fora do HTML. Pedido do usuário: " + prompt + " | generationConfig: temperature 0.7");
         const result = data?.candidates?.[0]?.content?.parts?.map(part => part.text || "").join("\n");
         if (!result) throw new Error("A IA não retornou código. Tente novamente com outro pedido.");
         generatedCode = cleanCode(result);
