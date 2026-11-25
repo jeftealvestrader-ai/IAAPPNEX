@@ -1,151 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050817">
-  <title>APPNEX IA — Sua ideia. Nosso código.</title>
-  <style>
-    :root{--bg:#050817;--panel:#0b1227;--line:rgba(124,164,255,.16);--text:#f7f9ff;--muted:#9aa9c8;--gradient:linear-gradient(110deg,#08c8f5 0%,#176bff 48%,#8b20f5 100%);--shadow:0 24px 80px rgba(0,0,0,.38)}
-    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 0%,rgba(0,119,255,.19),transparent 34%),radial-gradient(ellipse at 92% 12%,rgba(133,24,245,.16),transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
-    button,input,textarea{font:inherit} .shell{max-width:1180px;margin:auto;padding:28px 22px 56px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:8px 0 28px;border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;gap:13px} .mark{width:46px;height:46px;border-radius:15px;background:var(--gradient);display:grid;place-items:center;font-size:25px;font-weight:900;font-style:italic}
-    .brand-name{font-size:22px;font-weight:850;letter-spacing:2px} .brand-name span{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}
-    .tagline{font-size:10px;letter-spacing:2.5px;color:#b9c6df;margin-top:3px}
-    .private{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(13,26,52,.72);padding:9px 13px;border-radius:30px;color:#c7d5f0;font-size:12px}
-    .dot{width:7px;height:7px;border-radius:50%;background:#22d69a;box-shadow:0 0 12px #22d69a} .dot.off{background:#f43f5e;box-shadow:0 0 12px #f43f5e}
-    .hero{text-align:center;padding:54px 12px 36px} .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(8,200,245,.28);background:rgba(8,200,245,.07);color:#63dfff;border-radius:30px;padding:8px 13px;font-size:11px;font-weight:750;letter-spacing:1.5px;text-transform:uppercase}
-    h1{font-size:clamp(34px,6vw,58px);line-height:1.06;letter-spacing:-2px;margin:20px 0 14px} h1 span{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}
-    .hero p{max-width:650px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.7}
-    .workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:18px}
-    .panel{background:linear-gradient(150deg,rgba(15,27,55,.96),rgba(8,15,33,.97));border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow);min-width:0}
-    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px} .panel-title{font-size:15px;font-weight:800} .step{font-size:11px;color:#7f91b5;border:1px solid var(--line);padding:5px 9px;border-radius:20px}
-    label{display:block;color:#dce6fa;font-size:12px;font-weight:700;margin:17px 0 8px} .hint{font-size:11px;color:#8394b7;font-weight:400;margin-left:5px}
-    .field{width:100%;border:1px solid rgba(137,166,225,.2);background:#070e20;color:#f7f9ff;border-radius:12px;padding:13px 14px;outline:none} textarea.field{resize:vertical;min-height:156px;line-height:1.6}
-    .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px} .chip{border:1px solid rgba(116,150,218,.2);background:rgba(20,39,76,.58);color:#aebfe0;padding:7px 10px;border-radius:30px;font-size:11px;cursor:pointer} .chip.app{border-color:#22d69a;background:rgba(34,214,154,.12);color:#7dffc8;font-weight:800}
-    .primary{width:100%;margin-top:18px;border:0;border-radius:12px;padding:15px 18px;color:white;font-weight:800;background:var(--gradient);cursor:pointer} .primary:disabled{opacity:.6;cursor:wait}
-    .btn-app{width:100%;margin-top:10px;border:1px solid #22d69a;background:linear-gradient(110deg,#22d69a,#08c8f5);color:#04120c;border-radius:12px;padding:15px 18px;cursor:pointer;font-weight:900}
-    .test-btn{width:100%;margin-top:10px;border:1px solid rgba(8,200,245,.4);background:rgba(8,200,245,.1);color:#63dfff;border-radius:12px;padding:12px;cursor:pointer;font-weight:800;font-size:13px}
-    .output-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px} .output-actions{display:flex;gap:7px;flex-wrap:wrap} .action{border:1px solid var(--line);background:#101c37;color:#dce7fb;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700;cursor:pointer}
-    .output{min-height:365px;max-height:560px;overflow:auto;background:#050b19;border:1px solid rgba(125,158,221,.15);border-radius:13px;padding:17px;color:#c8d8f4;font:12px/1.7 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
-    .output.empty{display:flex;align-items:center;justify-content:center;text-align:center;color:#7183a8;font:13px/1.7 Inter,sans-serif}
-    .status{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:11px;color:#8fa2c5} .status-dot{width:7px;height:7px;border-radius:50%;background:#64748b} .status.loading .status-dot{background:#08c8f5;box-shadow:0 0 12px #08c8f5;animation:pulse 1s infinite} .status.ok .status-dot{background:#22d69a;box-shadow:0 0 12px #22d69a} @keyframes pulse{50%{opacity:.35}}
-    .footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:28px;padding-top:20px;color:#7183a8;font-size:11px} .footer strong{color:#b8c8e6;letter-spacing:1.5px}
-    @media(max-width:820px){.workspace{grid-template-columns:1fr}} @media(max-width:520px){.shell{padding:18px 13px 36px}.private{font-size:0;padding:10px}.panel{padding:18px}.hero{padding:38px 4px 28px}}
-    .badge{background:#22d69a;color:#04120c;font-size:10px;font-weight:900;padding:4px 8px;border-radius:20px;margin-left:6px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050817">
+<title>APPNEX IA — Sua ideia. Nosso código.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#050817;--panel:#0b1227;--line:rgba(124,164,255,.16);--text:#f7f9ff;--muted:#9aa9c8;--green:#22d69a;--blue:#176bff;--cyan:#08c8f5;--gradient:linear-gradient(110deg,#08c8f5 0%,#176bff 48%,#22d69a 100%);--shadow:0 24px 80px rgba(0,0,0,.38)}
+body{min-height:100vh;background:radial-gradient(ellipse at 12% 0%,rgba(0,119,255,.19),transparent 34%),radial-gradient(ellipse at 92% 12%,rgba(34,214,154,.15),transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+button,input,textarea{font:inherit}
+.shell{max-width:1180px;margin:auto;padding:28px 22px 90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:8px 0 28px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:13px}.mark{width:46px;height:46px;border-radius:15px;background:var(--gradient);display:grid;place-items:center;font-size:25px;font-weight:900;font-style:italic}
+.brand-name{font-size:22px;font-weight:850;letter-spacing:2px}.brand-name span{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}
+.tagline{font-size:10px;letter-spacing:2.5px;color:#b9c6df;margin-top:3px}
+.private{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(13,26,52,.72);padding:9px 13px;border-radius:30px;color:#c7d5f0;font-size:12px}
+.dot{width:7px;height:7px;border-radius:50%;background:#22d69a;box-shadow:0 0 12px #22d69a}.dot.off{background:#f43f5e;box-shadow:0 0 12px #f43f5e}
+.hero{text-align:center;padding:54px 12px 36px}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(8,200,245,.28);background:rgba(8,200,245,.07);color:#63dfff;border-radius:30px;padding:8px 13px;font-size:11px;font-weight:750;letter-spacing:1.5px;text-transform:uppercase}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.06;letter-spacing:-2px;margin:20px 0 14px}h1 span{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hero p{max-width:650px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.7}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:18px}
+.panel{background:linear-gradient(150deg,rgba(15,27,55,.96),rgba(8,15,33,.97));border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow);min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.panel-title{font-size:15px;font-weight:800}.step{font-size:11px;color:#7f91b5;border:1px solid var(--line);padding:5px 9px;border-radius:20px}
+label{display:block;color:#dce6fa;font-size:12px;font-weight:700;margin:17px 0 8px}
+.field{width:100%;border:1px solid rgba(137,166,225,.2);background:#070e20;color:#f7f9ff;border-radius:12px;padding:13px 14px;outline:none}textarea.field{resize:vertical;min-height:156px;line-height:1.6}
+.examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}.chip{border:1px solid rgba(116,150,218,.2);background:rgba(20,39,76,.58);color:#aebfe0;padding:7px 10px;border-radius:30px;font-size:11px;cursor:pointer}.chip.app{border-color:#22d69a;background:rgba(34,214,154,.12);color:#7dffc8;font-weight:800}
+.primary{width:100%;margin-top:18px;border:0;border-radius:12px;padding:15px 18px;color:white;font-weight:800;background:var(--gradient);cursor:pointer}.primary:disabled{opacity:.6;cursor:wait}
+.btn-app{width:100%;margin-top:10px;border:1px solid #22d69a;background:linear-gradient(110deg,#22d69a,#08c8f5);color:#04120c;border-radius:12px;padding:15px 18px;cursor:pointer;font-weight:900}
+.test-btn{width:100%;margin-top:10px;border:1px solid rgba(8,200,245,.4);background:rgba(8,200,245,.1);color:#63dfff;border-radius:12px;padding:12px;cursor:pointer;font-weight:800;font-size:13px}
+.output-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.output-actions{display:flex;gap:7px;flex-wrap:wrap}.action{border:1px solid var(--line);background:#101c37;color:#dce7fb;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700;cursor:pointer}
+.output{min-height:365px;max-height:560px;overflow:auto;background:#050b19;border:1px solid rgba(125,158,221,.15);border-radius:13px;padding:17px;color:#c8d8f4;font:12px/1.7 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.output.empty{display:flex;align-items:center;justify-content:center;text-align:center;color:#7183a8;font:13px/1.7 Inter,sans-serif}
+.status{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:11px;color:#8fa2c5}.status-dot{width:7px;height:7px;border-radius:50%;background:#64748b}.status.loading .status-dot{background:#08c8f5;box-shadow:0 0 12px #08c8f5;animation:pulse 1s infinite}.status.ok .status-dot{background:#22d69a;box-shadow:0 0 12px #22d69a}@keyframes pulse{50%{opacity:.35}}
+.footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:28px;padding-top:20px;color:#7183a8;font-size:11px;text-align:center}.footer strong{color:#b8c8e6;letter-spacing:1.5px}
+.wpp{position:fixed;right:18px;bottom:18px;z-index:999;width:60px;height:60px;border-radius:50%;background:#25D366;display:grid;place-items:center;font-size:30px;text-decoration:none;box-shadow:0 10px 30px rgba(37,211,102,.5);border:2px solid #fff}
+.badge{background:#22d69a;color:#04120c;font-size:10px;font-weight:900;padding:4px 8px;border-radius:20px;margin-left:6px}
+@media(max-width:820px){.workspace{grid-template-columns:1fr}}@media(max-width:520px){.shell{padding:18px 13px 90px}.private{font-size:0;padding:10px}.panel{padding:18px}.hero{padding:38px 4px 28px}}
+</style>
 </head>
 <body>
-  <main class="shell">
-    <header>
-      <div class="brand"><div class="mark">A</div><div><div class="brand-name">APP<span>NEX</span></div><div class="tagline">TECNOLOGIA QUE CONECTA VOCÊ</div></div></div>
-      <div class="private" id="statusTopo"><span class="dot" id="dotTopo"></span> <span id="textoTopo">IA LIGADA ✅</span></div>
-    </header>
-    <section class="hero">
-      <div class="eyebrow">✦ IA de verdade - Sem chave, sem cadastro</div>
-      <h1>Sua ideia. <span>Nosso código.</span></h1>
-      <p>IA de verdade, grátis, sem precisar de chave. Descreva o que deseja criar e sua assistente APPNEX IA prepara o código HTML para você. <span class="badge">SEM CHAVE</span></p>
-    </section>
-    <section class="workspace">
-      <div class="panel">
-        <div class="panel-head"><div class="panel-title">Criar novo projeto</div><div class="step">ETAPA 01</div></div>
-        <div style="background:rgba(34,214,154,.12);border:1px solid #22d69a;border-radius:12px;padding:12px;font-size:12px;line-height:1.6">✅ <b>IA conectada automaticamente</b><br>Você não precisa de chave. É só escrever sua ideia e clicar em GERAR.</div>
-        <button class="test-btn" id="testar" type="button">⚡ TESTAR IA DE VERDADE</button>
-        <label for="prompt">O que vamos desenvolver?</label>
-        <textarea class="field" id="prompt" placeholder="Ex.: Crie um app de delivery de pizzaria, com cardápio, carrinho e pedido pelo WhatsApp..."></textarea>
-        <div class="examples">
-          <button class="chip" type="button" data-prompt="Crie um site institucional moderno para uma empresa de tecnologia, com serviços, sobre nós e contato.">Site institucional</button>
-          <button class="chip" type="button" data-prompt="Crie uma landing page profissional para divulgar um serviço, com chamada principal e botão de WhatsApp.">Landing page</button>
-          <button class="chip" type="button" data-prompt="Crie um painel administrativo responsivo com menu lateral, cards de indicadores e tabela de dados de exemplo.">Painel administrativo</button>
-          <button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular, com tela inicial, menu inferior com 4 abas, cards, botões grandes, design mobile-first, que funcione como PWA e pareça um app nativo. Tema: app de delivery de pizzaria com cardápio, carrinho e pedido pelo WhatsApp.">📱 Criar App</button>
-          <button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular para uma boleira, com catálogo de bolos, pedidos, calendário e painel, menu inferior, design mobile-first, que pareça um app nativo.">📱 App de Boleira</button>
-          <button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular para academia, com treinos, agendamento, perfil do aluno e menu inferior, design mobile-first, que pareça um app nativo.">📱 App de Academia</button>
-        </div>
-        <button class="primary" id="generate" type="button">✦ &nbsp; GERAR CÓDIGO HTML</button>
-        <button class="btn-app" id="generateApp" type="button">📱 &nbsp; GERAR APP</button>
-        <p style="font-size:11px;color:#8092b5;line-height:1.6;margin-top:13px">IA de verdade via Pollinations / OpenAI-compatível, sem chave. Pode gerar quantas vezes quiser.</p>
-      </div>
-      <div class="panel">
-        <div class="output-head"><div><div class="panel-title">Código gerado</div><div class="hint" style="display:block;margin:5px 0 0">Seu projeto aparecerá nesta área</div></div>
-          <div class="output-actions"><button class="action" id="copy" type="button">Copiar</button><button class="action" id="download" type="button">Baixar HTML</button><button class="action" id="previewBtn" type="button">👁️ Ver site</button></div></div>
-        <pre class="output empty" id="output">✧ Seu próximo projeto começa com uma ideia.
-Descreva o que deseja criar e clique em “Gerar código HTML” ou “Gerar App”. IA de verdade, sem chave.</pre>
-        <div class="status" id="status"><span class="status-dot"></span><span id="statusText">IA pronta - sem chave necessária</span></div>
-      </div>
-    </section>
-    <footer class="footer"><strong>APPNEX</strong><span>Sua ideia. Nosso código. Um mundo de possibilidades.</span><span>© <span id="year"></span> APPNEX Tecnologia</span></footer>
-  </main>
-  <script>
-    const $ = (id) => document.getElementById(id);
-    let generatedCode = "";
-    $("year").textContent = new Date().getFullYear();
-    $("toggleKey") && $("toggleKey").addEventListener("click", ()=>{});
-    document.querySelectorAll("[data-prompt]").forEach(b=> b.addEventListener("click", ()=> $("prompt").value = b.dataset.prompt));
-    function setStatus(m, loading=false, ok=false){ $("statusText").textContent=m; $("status").classList.toggle("loading",loading); $("status").classList.toggle("ok",ok); }
-    function setTopo(ligada){ $("dotTopo").className = ligada ? "dot" : "dot off"; $("textoTopo").textContent = ligada ? "IA LIGADA ✅" : "IA DESLIGADA"; }
-    function cleanCode(v){ return v.trim().replace(/^```(?:html)?\s*/i,"").replace(/\s*```$/,"").trim(); }
-    function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+<main class="shell">
+<header>
+<div class="brand"><div class="mark">A</div><div><div class="brand-name">APP<span>NEX</span></div><div class="tagline">TECNOLOGIA QUE CONECTA VOCÊ</div></div></div>
+<div class="private" id="statusTopo"><span class="dot" id="dotTopo"></span><span id="textoTopo">IA LIGADA ✅</span></div>
+</header>
+<section class="hero">
+<div class="eyebrow">✦ IA de verdade dentro do site - Sem chave</div>
+<h1>Sua ideia. <span>Nosso código.</span></h1>
+<p>IA de verdade já dentro do site, grátis, sem chave e sem cadastro. Descreva o que deseja criar e a APPNEX IA gera o código pra você. <span class="badge">IA DENTRO</span></p>
+</section>
+<section class="workspace">
+<div class="panel">
+<div class="panel-head"><div class="panel-title">Criar novo projeto</div><div class="step">ETAPA 01</div></div>
+<div style="background:rgba(34,214,154,.12);border:1px solid #22d69a;border-radius:12px;padding:12px;font-size:12px;line-height:1.6">✅ <b>IA conectada dentro do site</b><br>Sem chave, sem cadastro. É só escrever e clicar em GERAR.</div>
+<button class="test-btn" id="testar" type="button">⚡ TESTAR IA AGORA</button>
+<label for="prompt">O que vamos desenvolver?</label>
+<textarea class="field" id="prompt" placeholder="Ex.: Crie um app de delivery de pizzaria, com cardápio, carrinho e pedido pelo WhatsApp..."></textarea>
+<div class="examples">
+<button class="chip" type="button" data-prompt="Crie um site institucional moderno para uma empresa de tecnologia, com serviços, sobre nós e contato.">Site institucional</button>
+<button class="chip" type="button" data-prompt="Crie uma landing page profissional para divulgar um serviço, com chamada principal e botão de WhatsApp.">Landing page</button>
+<button class="chip" type="button" data-prompt="Crie um painel administrativo responsivo com menu lateral, cards de indicadores e tabela de dados.">Painel administrativo</button>
+<button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular, com tela inicial, menu inferior com 4 abas, cards, botões grandes, design mobile-first, que funcione como PWA e pareça um app nativo. Tema: app de delivery de pizzaria com cardápio, carrinho e pedido pelo WhatsApp.">📱 Criar App</button>
+<button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular para uma boleira, com catálogo de bolos, pedidos, calendário e painel, menu inferior, design mobile-first, que pareça um app nativo.">📱 App de Boleira</button>
+<button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular para academia, com treinos, agendamento, perfil do aluno e menu inferior, design mobile-first, que pareça um app nativo.">📱 App de Academia</button>
+<button class="chip app" type="button" data-prompt="Crie um aplicativo web completo estilo app de celular para barbearia, com agendamento, serviços, preços, profissionais e menu inferior, design mobile-first.">📱 App de Barbearia</button>
+</div>
+<button class="primary" id="generate" type="button">✦ &nbsp; GERAR CÓDIGO HTML</button>
+<button class="btn-app" id="generateApp" type="button">📱 &nbsp; GERAR APP</button>
+<p style="font-size:11px;color:#8092b5;line-height:1.6;margin-top:13px">IA de verdade embutida no site via Pollinations. Sem chave. Pode gerar quantas vezes quiser.</p>
+</div>
+<div class="panel">
+<div class="output-head"><div><div class="panel-title">Código gerado</div><div style="font-size:11px;color:#8394b7;margin-top:5px">Seu projeto aparecerá nesta área</div></div>
+<div class="output-actions"><button class="action" id="copy" type="button">Copiar</button><button class="action" id="download" type="button">Baixar HTML</button><button class="action" id="previewBtn" type="button">👁️ Ver site</button></div></div>
+<pre class="output empty" id="output">✧ Seu próximo projeto começa com uma ideia.
+Descreva o que deseja criar e clique em “Gerar código HTML” ou “Gerar App”. IA de verdade dentro do site, sem chave.</pre>
+<div class="status" id="status"><span class="status-dot"></span><span id="statusText">IA pronta - dentro do site</span></div>
+</div>
+</section>
+<footer class="footer"><strong>APPNEX</strong><span>Feito pela App Nex - Apps & Sites</span><span>© <span id="year"></span> APPNEX Tecnologia</span></footer>
+</main>
+<a class="wpp" href="https://wa.me/5511000000000?text=Ol%C3%A1%20App%20Nex!%20Quero%20um%20app%20ou%20site." target="_blank" title="Falar no WhatsApp">💬</a>
+<script>
+const $=id=>document.getElementById(id);
+let generatedCode="";
+$("year").textContent=new Date().getFullYear();
+document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>$("prompt").value=b.dataset.prompt));
+function setStatus(m,loading=false,ok=false){$("statusText").textContent=m;$("status").classList.toggle("loading",loading);$("status").classList.toggle("ok",ok);}
+function setTopo(ligada){$("dotTopo").className=ligada?"dot":"dot off";$("textoTopo").textContent=ligada?"IA LIGADA ✅":"IA DESLIGADA";}
+function cleanCode(v){return v.trim().replace(/^```(?:html)?\s*/i,"").replace(/\s*```$/,"").trim();}
 
-    // IA DE VERDADE SEM CHAVE - Pollinations (OpenAI compatível, grátis)
-    async function chamarIA(texto){
-      // Tentativa 1: Pollinations - IA de verdade, sem chave
-      try{
-        const r = await fetch("https://text.pollinations.ai/" + encodeURIComponent(texto), { method:"GET", headers:{ "Accept":"text/plain" } });
-        if(r.ok){ const t = await r.text(); if(t && t.length>100) return t; }
-      }catch(e){}
-      // Tentativa 2: Pollinations via POST OpenAI
-      const r2 = await fetch("https://text.pollinations.ai/openai", {
-        method:"POST", headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ model:"openai", messages:[{role:"user", content: texto}], max_tokens: 8000 })
-      });
-      const d = await r2.json();
-      const out = d?.choices?.[0]?.message?.content;
-      if(!out) throw new Error("IA ocupada, tenta de novo em 10 segundos.");
-      return out;
-    }
+// IA DENTRO DO SITE - Pollinations grátis, sem chave, 2 tentativas
+async function chamarIA(texto){
+  // 1 - POST OpenAI (mais confiável)
+  try{
+    const r=await fetch("https://text.pollinations.ai/openai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai",messages:[{role:"system",content:"Você é a APPNEX IA, programadora especialista. Sempre responda só com HTML completo."},{role:"user",content:texto}],max_tokens:9000,temperature:0.7})});
+    if(r.ok){const d=await r.json();const out=d?.choices?.[0]?.message?.content;if(out&&out.length>200)return out;}
+  }catch(e){}
+  // 2 - GET simples
+  const r2=await fetch("https://text.pollinations.ai/"+encodeURIComponent(texto),{headers:{"Accept":"text/plain"}});
+  if(!r2.ok) throw new Error("IA ocupada, espera 10 segundos e tenta de novo.");
+  const t=await r2.text();
+  if(!t||t.length<100) throw new Error("IA não respondeu, tenta de novo.");
+  return t;
+}
 
-    $("testar").addEventListener("click", async ()=>{
-      setStatus("Testando IA de verdade...", true);
-      try{
-        const r = await chamarIA("Responda só: OK, IA funcionando");
-        setStatus("IA DE VERDADE LIGADA ✅ Pronta!", false, true); setTopo(true);
-        alert("✅ IA DE VERDADE LIGADA!\n\nResposta da IA: " + r.slice(0,100));
-      }catch(e){ setStatus("Tenta de novo em 10s: "+e.message); alert("Espera 10 segundos e clica de novo: "+e.message); }
-    });
-
-    $("generate").addEventListener("click", ()=> gerar(false));
-    $("generateApp").addEventListener("click", ()=> gerar(true));
-    async function gerar(modoApp){
-      let prompt = $("prompt").value.trim();
-      if(modoApp){
-        if(!prompt) prompt = "Crie um aplicativo web completo estilo app de celular, com tela inicial, menu inferior, cards e botões grandes, design mobile-first, que pareça um app nativo.";
-        if(!prompt.toLowerCase().includes("aplicativo") && !prompt.toLowerCase().includes("app")) prompt = "Crie um APLICATIVO WEB completo estilo app de celular, mobile-first, com tela inicial, menu inferior com abas, cards, botões grandes, que pareça um app nativo e funcione como PWA. Ideia do app: " + prompt;
-        $("prompt").value = prompt;
-      }
-      if(!prompt){ setStatus("Descreva o projeto que deseja criar."); $("prompt").focus(); return; }
-      $("generate").disabled=true; $("generateApp").disabled=true;
-      $("generate").textContent = modoApp ? "CRIANDO SEU APP..." : "GERANDO SEU PROJETO...";
-      $("output").classList.remove("empty");
-      $("output").textContent = "A APPNEX IA de verdade está criando... Aguarde 10 a 30 segundos, ela está escrevendo o código...";
-      generatedCode=""; setStatus("IA de verdade trabalhando...", true);
-      try{
-        const instrucao = modoApp ? "Você é a APPNEX IA. Crie um APLICATIVO WEB completo estilo app de celular. OBRIGATÓRIO: design mobile-first (max-width 430px centralizado), tela inicial, menu inferior fixo com 4 abas clicáveis, cards, botões grandes, navegação por telas sem recarregar, salvar dados no localStorage, parecer um app nativo. " : "Você é a APPNEX IA, desenvolvedora web especialista. ";
-        const textoCompleto = instrucao + "Crie exatamente o que o usuário pediu. Entregue SOMENTE um documento HTML completo, funcional e pronto para salvar como index.html. Use português do Brasil, design profissional, responsivo. Quando fizer sentido, inclua botão de WhatsApp, mas não invente número: use um campo para o usuário configurar. Não explique o código fora do HTML. Pedido: " + prompt;
-        const result = await chamarIA(textoCompleto);
-        if(!result) throw new Error("IA não retornou código.");
-        generatedCode = cleanCode(result);
-        $("output").textContent = generatedCode;
-        setStatus(modoApp ? "APP criado com IA de verdade! Clique em Ver site." : "Código gerado com IA de verdade!", false, true); setTopo(true);
-      }catch(e){
-        $("output").classList.add("empty"); $("output").textContent = "Não foi possível gerar.\n\n"+e.message+"\n\nEspera 10 segundos e tenta de novo.";
-        setStatus("Erro: "+e.message);
-      }finally{ $("generate").disabled=false; $("generateApp").disabled=false; $("generate").textContent="✦  GERAR CÓDIGO HTML"; }
-    }
-    $("copy").addEventListener("click", async ()=>{ if(!generatedCode){setStatus("Gere um código antes.");return;} try{await navigator.clipboard.writeText(generatedCode); setStatus("Copiado!",false,true);}catch{setStatus("Não foi possível copiar.");} });
-    $("download").addEventListener("click", ()=>{ if(!generatedCode){setStatus("Gere um código antes.");return;} const blob=new Blob([generatedCode],{type:"text/html;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="index.html"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); setStatus("Download iniciado.",false,true); });
-    $("previewBtn").addEventListener("click", ()=>{ if(!generatedCode){setStatus("Gere um código antes.");return;} const w=window.open('','_blank'); w.document.write(generatedCode); w.document.close(); });
-    setTopo(true); setStatus("IA de verdade pronta - sem chave", false, true);
-  </script>
+$("testar").addEventListener("click",async()=>{
+  setStatus("Testando IA dentro do site...",true);
+  try{const r=await chamarIA("Responda só: OK IA funcionando");setStatus("IA DE VERDADE LIGADA ✅ Pronta!",false,true);setTopo(true);alert("✅ IA LIGADA DENTRO DO SITE!\n\nResposta: "+r.slice(0,120));}
+  catch(e){setStatus("Tenta de novo em 10s: "+e.message);alert("Espera 10s e clica de novo: "+e.message);}
+});
+$("generate").addEventListener("click",()=>gerar(false));
+$("generateApp").addEventListener("click",()=>gerar(true));
+async function gerar(modoApp){
+  let prompt=$("prompt").value.trim();
+  if(modoApp){
+    if(!prompt) prompt="Crie um aplicativo web completo estilo app de celular, com tela inicial, menu inferior, cards e botões grandes, design mobile-first, que pareça um app nativo.";
+    if(!prompt.toLowerCase().includes("aplicativo")&&!prompt.toLowerCase().includes("app")) prompt="Crie um APLICATIVO WEB completo estilo app de celular, mobile-first, com tela inicial, menu inferior com 4 abas, cards, botões grandes, que pareça um app nativo e funcione como PWA. Ideia do app: "+prompt;
+    $("prompt").value=prompt;
+  }
+  if(!prompt){setStatus("Descreva o projeto.");$("prompt").focus();return;}
+  $("generate").disabled=true;$("generateApp").disabled=true;
+  $("generate").textContent=modoApp?"CRIANDO SEU APP...":"GERANDO SEU PROJETO...";
+  $("output").classList.remove("empty");
+  $("output").textContent="A APPNEX IA está criando... Aguarde 10 a 30 segundos, ela está escrevendo o código...";
+  generatedCode="";setStatus("IA dentro do site trabalhando...",true);
+  try{
+    const instrucao=modoApp?"Você é a APPNEX IA. Crie um APLICATIVO WEB completo estilo app de celular. OBRIGATÓRIO: design mobile-first (max-width 430px centralizado), cores azul escuro #050817 + verde #22d69a, tela inicial, menu inferior fixo com 4 abas clicáveis, cards, botões grandes, navegação por telas sem recarregar, salvar dados no localStorage, parecer app nativo, botão flutuante de WhatsApp, rodapé 'Feito pela App Nex - Apps & Sites'. ":"Você é a APPNEX IA, desenvolvedora web especialista. ";
+    const textoCompleto=instrucao+"Crie exatamente o que o usuário pediu. Entregue SOMENTE um documento HTML completo, funcional e pronto para salvar como index.html. Use português do Brasil, design bonito, moderno, cores azul escuro #050817 + verde #22d69a, responsivo, botão flutuante de WhatsApp no canto, rodapé 'Feito pela App Nex - Apps & Sites'. Não explique fora do HTML. Pedido: "+prompt;
+    const result=await chamarIA(textoCompleto);
+    if(!result) throw new Error("IA não retornou código.");
+    generatedCode=cleanCode(result);
+    $("output").textContent=generatedCode;
+    setStatus(modoApp?"APP criado com IA! Clique em Ver site.":"Código gerado com IA!",false,true);setTopo(true);
+  }catch(e){
+    $("output").classList.add("empty");$("output").textContent="Não foi possível gerar.\n\n"+e.message+"\n\nEspera 10 segundos e tenta de novo.";
+    setStatus("Erro: "+e.message);
+  }finally{$("generate").disabled=false;$("generateApp").disabled=false;$("generate").textContent="✦  GERAR CÓDIGO HTML";}
+}
+$("copy").addEventListener("click",async()=>{if(!generatedCode){setStatus("Gere um código antes.");return;}try{await navigator.clipboard.writeText(generatedCode);setStatus("Copiado!",false,true);}catch{setStatus("Não foi possível copiar.");}});
+$("download").addEventListener("click",()=>{if(!generatedCode){setStatus("Gere um código antes.");return;}const blob=new Blob([generatedCode],{type:"text/html;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="index.html";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);setStatus("Download iniciado.",false,true);});
+$("previewBtn").addEventListener("click",()=>{if(!generatedCode){setStatus("Gere um código antes.");return;}const w=window.open('','_blank');w.document.write(generatedCode);w.document.close();});
+setTopo(true);setStatus("IA de verdade pronta - dentro do site",false,true);
+</script>
 </body>
 </html>
